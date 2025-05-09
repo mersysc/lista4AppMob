@@ -1,5 +1,11 @@
 package com.example.lista4zpam
 
+/**
+ * Klasa User pozwala na tworzenie uzytkownikow
+ * oraz realizacje przez nich funkcji logowania
+ * i rejestracji
+ *
+ */
 abstract class User(
     var id: String,
     var login: String,
@@ -9,13 +15,18 @@ abstract class User(
 ) {
 
     /**
-     * zdefiniowanie id i listy wszystkich uzytkownikow
+     * Utworzenie bazy uzytkownikow do rejestracji i logowania
      */
     companion object UsersBase {
-        private val users = mutableListOf<User>()
+        val users = mutableListOf<User>()
         private var sellerId = 1
         private var buyerId = 1
 
+        /**
+         * Funkcja dodaje uzytkownika do bazy i tworzy id
+         *
+         * @param user [User] - uzytkownik marketplace typu User
+         */
         fun addUser(user: User) {
             when (user) {
                 is Seller -> user.id = "S${sellerId++}"
@@ -24,28 +35,41 @@ abstract class User(
             users.add(user)
         }
 
-        fun log(login: String, password: String, role: String): User? {
-            val check = users.find { it.login == login && it.password == password }
-            if (check != null) {
-                val isCorrectRole = when (role.lowercase()) {
-                    "seller" -> check is Seller
-                    "buyer" -> check is Buyer
-                    else -> false
-                }
 
-                return if (isCorrectRole) {
-                    println("Zalogowano jako ${check.login} (${check::class.simpleName})")
-                    check
-                } else {
-                    println("Ten użytkownik nie jest typu $role.")
-                    null
-                }
+        /**
+         * Funkcja loguje uzytkownika zarejestrowanego, jezeli
+         * haslo i login odpowiadaja jednemu uzytkownikowi i sa
+         * zgodne z baza uzytkownikow
+         *
+         * @param login [String] - nazwa uzytkownika
+         * @param password [String] - haslo uzytkownika
+         * @return uzytkownik typu User, jezeli uda sie zalogowac
+         * lub null, jezeli uzytkownik nie istnieje lub jest blad
+         * w danych wejsciowych
+         */
+        fun log(login: String, password: String): User? {
+            val check = users.find { it.login == login && it.password == password }
+
+            if (check != null) {
+                val role = if (check is Seller) "Seller" else "Buyer"
+                println("Logged as ($role). Welcome ${check.login}!")
+                return check
             } else {
-                println(" Błędny login lub hasło.")
+                println("Wrong login or password. If you don't have account, register first!")
                 return null
             }
         }
 
+        /**
+         * Funkcja rejestracji tworzy odpowiednio
+         * uzytkownika, ktory bedzie kupcem lub sprzedawca
+         *
+         * @param login [String] - nazwa uzytkownika dluzsza od 3 znakow
+         * @param email [String] - adres e-mail uzytkownika (musi zawierac @)
+         * @param dateRegister [String] - data rejestracji
+         * @param password [String] - haslo uzytkownika dluzsze od 5 znakow
+         * @param role [String] - rola kupca (b) lub sprzedawcy (s)
+         */
         fun register(
             login: String,
             email: String,
@@ -68,9 +92,9 @@ abstract class User(
             }
 
             when (role.lowercase()) {
-                "seller" -> addUser(Seller("", login, email, dateRegister, password))
-                "buyer" -> addUser(Buyer("", login, email, dateRegister, password))
-                else -> println("Wrong role: choose Buyer or Seller")
+                "s" -> addUser(Seller("", login, email, dateRegister, password))
+                "b" -> addUser(Buyer("", login, email, dateRegister, password))
+                else -> println("Wrong role: choose Buyer (b) or Seller (s)")
             }
         }
     }

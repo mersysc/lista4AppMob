@@ -1,5 +1,10 @@
 package com.example.lista4zpam
 
+/**
+ * Klasa sprzedawca dziedziczaca po klasie User
+ * odpowiada za dodawanie i usuwanie produktow do
+ * sprzedazy
+ */
 class Seller(
     id: String, login: String,
     email: String, dateRegister: String, password: String
@@ -7,7 +12,11 @@ class Seller(
 
     val allProducts = mutableListOf<Product>()
 
-    // dodawanie nowego produktu
+    /**
+     * Metoda dodaje produkt o okreslonej nazwie, cenie,
+     * ilosci oraz opisie, a nastepnie trafia na liste
+     * wszystkich produktow do sprzedazy
+     */
     fun newProduct(){
         println("Name of new product:")
         val name = readln()
@@ -23,7 +32,9 @@ class Seller(
         println("New product: $product")
     }
 
-
+    /**
+     * Metoda usuwa produkt o okreslonej nazwie
+     */
     fun removeProducts(name: String){
         if(allProducts.isEmpty()){
             println("There are no products to remove!")

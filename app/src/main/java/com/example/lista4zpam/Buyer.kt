@@ -1,10 +1,23 @@
 package com.example.lista4zpam
 
+/**
+ * Klasa tworzaca obiekt Buyer, czyli kupca,
+ * dziedzicaca po klasie User, opisuje dzialania
+ * kupca, tj. wyswietlanie produktow, zakup produktow,
+ * wyswietlanie sprzedawcow, platnosc za produkt oraz
+ * wystawianie opinii
+ */
 class Buyer(
-    id: String, login: String,
-    email: String, dateRegister: String, password: String
+    id: String,
+    login: String,
+    email: String,
+    dateRegister: String,
+    password: String
 ) : User(id, login, email, dateRegister, password), Payment, Opinion {
 
+    /**
+     * Funkcja pokazuje liste produktow
+     */
     fun seeAllProducts(products: List<Product>){
         if(products.isEmpty()){
             println("Nothing is being sold")
@@ -40,6 +53,9 @@ class Buyer(
         if (toBuy != null){
             toBuy.amount--
             payForProduct(toBuy.price)
+            if(toBuy.amount == 0){
+                toBuy.seller.allProducts.remove(toBuy)
+            }
             println("You succesfully have bought a product ${toBuy.name}")
         }
     }
